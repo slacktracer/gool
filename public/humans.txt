@@ -1,0 +1,15 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Thiago Figueiredo -- All-Mighty Creator -- slacktracer@gmail.com
+
+# THANKS
+
+    Zana Ribeiro
+
+# TECHNOLOGY COLOPHON
+
+    HTML, CSS, JS
+    RequireJS, sketch.js, glMatrix

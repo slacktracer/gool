@@ -1,0 +1,6 @@
+{
+    "cookies": false,
+    "favicon": false,
+    "folder": "./public",
+    "port": 8001
+}
