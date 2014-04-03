@@ -10,4 +10,5 @@ define([
     socket.on('connected to a teapot', function (data) {
         console.log('connected to a teapot indeed', data);
     });
+    return socket;
 });

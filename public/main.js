@@ -5,10 +5,8 @@ require.config({
     }
 });
 require([
-    'modules/events',
     'modules/main'
 ], function (
-    events,
     main
 ) {
     'use strict';
