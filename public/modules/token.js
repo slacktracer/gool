@@ -1,10 +1,12 @@
 define([
     'modules/context',
     'modules/engine',
+    'modules/socket',
     'modules/vec2'
 ], function (
     Context,
     Engine,
+    socket,
     vec2
 ) {
     'use strict';
@@ -21,6 +23,16 @@ define([
         update: function update(dt, input, metre, rho) {
             var
                 timeStep;
+            if (this.master) {
+                if (input.up || input.right || input.down || input.left) {
+                    input.id = this.id;
+                    socket.emit('input', input);
+                }
+            }
+            // if (this.slave) {
+                input = this.input || {};
+                this.input = null;
+            // }
             timeStep = dt / 1000;
             this.engine.update(input, timeStep);
             this.applyForce(this.calculateDragForce(rho));
@@ -128,6 +140,7 @@ define([
         }
     };
     return {
+        all: {},
         create: function create(configuration) {
             configuration = configuration || {};
             var
@@ -137,18 +150,21 @@ define([
             token.angularDisplacement = configuration.angularDisplacement || 0;
             token.engine = configuration.engine ? Engine.create(configuration.engine) : Engine.create();
             token.mass = configuration.mass || 20;
+            token.master = configuration.master;
             token.position = configuration.position || vec2.fromValues(0, 0);
             token.radius = configuration.radius || 1;
+            token.slave = configuration.slave;
             // internal properties
             token.average_acceleration = vec2.create();
             token.current_acceleration = vec2.create();
+            token.id = configuration.id;
             token.previous_acceleration = vec2.fromValues(0, 0);
             // non-configurable properties (yet)
             token.colour = 'hsla(194, 80%, 40%, 0.6)';
             token.dragCoefficient = 0.47;
             token.force = vec2.fromValues(0, 0); // the sum of forces applied over the token at any given time
             token.velocity = vec2.fromValues(0, 0);
-            token.it = configuration.it || false;
+            // token.it = configuration.it || false;
             return token;
         }
     };

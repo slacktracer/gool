@@ -2,6 +2,7 @@ define([
     'modules/camera',
     'modules/context',
     'modules/dot',
+    'modules/socket',
     'modules/grid',
     // 'modules/spot',
     'modules/token',
@@ -11,6 +12,7 @@ define([
     Camera,
     Context,
     Dot,
+    socket,
     Grid,
     // Spot,
     Token,
@@ -43,11 +45,12 @@ define([
                 height: world.getZoneByName('dangerZone').length * world.metre
             }
         );
-        tokens = [
-            Token.create({
-                master: true
-            })
-        ];
+        tokens = [];
+        var p = Token.create({
+            master: true
+        });
+        Token.all['master'] = p;
+        tokens.push(p);
         camera = Camera.create(context.width, context.height, 0, 0, tokens[0], false);
         dots = [];
         for (i = 0, length = world.dots.howMany; i < length; i += 1) {
@@ -56,6 +59,34 @@ define([
             dot.colour = world.getZoneByPosition(vec2.length(dot.position) / world.metre).dotColour(dot.glimmer);
             dots.push(Dot.create(dot, camera.position));
         }
+        socket.on('connected to a teapot', function (data) {
+            Token.all['master'].id = data.id;
+            Token.all[data.id] = Token.all['master'];
+            var k = Object.keys(data.players);
+            for (var i = 0, length = k.length; i < length; i += 1) {
+                if (data.id !== k[i]) {
+                    var n = Token.create({
+                        id: k[i],
+                        slave: true
+                    });
+                    Token.all[k[i]] = n;
+                    tokens.push(n);
+                }
+            }
+        });
+        socket.on('new', function (data) {
+            var n = Token.create({
+                slave: true
+            });
+            Token.all[data] = n;
+            tokens.push(n);
+        });
+        socket.on('input', function (data) {
+            Token.all[data.id].input = data;
+        });
+        socket.on('user disconnect', function (data) {
+            Token.all[data].dead = true;
+        });
     };
     context.update = function update() {
         var
@@ -94,12 +125,12 @@ define([
                 ) {
                     tokens[a].colliding = true;
                     tokens[b].colliding = true;
-                    if (tokens[a].master && !tokens[b].master) {
-                        tokens[b].velocity = vec2.fromValues(0, 0);
-                    }
-                    if (tokens[b].master && !tokens[a].master) {
-                        tokens[a].velocity = vec2.fromValues(0, 0);
-                    }
+                    // if (tokens[a].master && !tokens[b].master) {
+                    //     tokens[b].velocity = vec2.fromValues(0, 0);
+                    // }
+                    // if (tokens[b].master && !tokens[a].master) {
+                    //     tokens[a].velocity = vec2.fromValues(0, 0);
+                    // }
                 }
             }
             tokens[a].update(context.dt, input, world.metre, rho);
