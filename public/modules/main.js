@@ -82,7 +82,15 @@ define([
             tokens.push(n);
         });
         socket.on('input', function (data) {
-            Token.all[data.id].input = data;
+            var
+                i,
+                length,
+                keys;
+            keys = Object.keys(data);
+            for (i = 0, length = keys.length; i < length; i += 1) {
+                Token.all[keys[i]].input = data[keys[i]];
+            }
+            // Token.all[data.id].input = data;
         });
         socket.on('user disconnect', function (data) {
             Token.all[data].dead = true;

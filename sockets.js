@@ -1,7 +1,9 @@
 'use strict';
-var tokens = {};
 module.exports = function sockets(handler, logbook) {
     // defining sockets' behavior
+    var
+        tokens;
+    tokens = require('./modules/token');
     handler.sockets.on('connection', function (socket) {
         var
             length;
@@ -14,10 +16,16 @@ module.exports = function sockets(handler, logbook) {
         socket.broadcast.emit('new', socket.id);
         socket.on('input', function (input) {
             // socket.broadcast.emit('input', input);
-            handler.sockets.emit('input', input);
+            tokens[input.id] = {};
+            tokens[input.id] = input;
+            // handler.sockets.emit('input', input);
         });
         socket.on('disconnect', function () {
             handler.sockets.emit('user disconnected', socket.id);
         });
+        setInterval(function () {
+            console.log(tokens)
+            handler.sockets.emit('input', tokens);
+        }, 30);
     });
 };
