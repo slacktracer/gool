@@ -1,7 +1,10 @@
-'use strict';
-module.exports = function routes(application, logbook) {
-    // defining routes
-    application.get('*', function getAll(request, response) {
-        response.sendfile('./public/index.html');
-    });
-};
+define(function () {
+    'use strict';
+    return function routes(application, logbook) {
+        // defining routes
+        application.get('*', function getAll(request, response) {
+            logbook.info('Sending index.html');
+            response.sendfile('./public/index.html');
+        });
+    };
+});

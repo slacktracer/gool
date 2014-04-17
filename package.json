@@ -5,7 +5,8 @@
     },
     "dependencies": {
         "log": "git+https://github.com/slacktracer/log.js.git",
-        "lokapala": "git+https://github.com/slacktracer/lokapala.git"
+        "lokapala": "git+https://github.com/slacktracer/lokapala.git",
+        "requirejs": "^2.1.11"
     },
     "description": "A game!",
     "engines": {
