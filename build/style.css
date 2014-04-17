@@ -1,0 +1,4 @@
+a {
+  width: -webkit-calc(50% - 2em);
+  width: calc(50% - 2em);
+}

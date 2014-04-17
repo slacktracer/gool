@@ -1,25 +1,28 @@
 {
-    "author": "Thiago F. <slacktracer@gmail.com>",
-    "dependencies": {
-        "client-sessions": "0.6.x",
-        "express": "3.4.x",
-        "log": "git+https://github.com/slacktracer/log.js.git",
-        "lokapala": "git+https://github.com/slacktracer/lokapala.git",
-        "socket.io": "0.9.x"
-    },
-    "description": "A game!",
-    "engines": {
-        "node": "0.10.x"
-    },
-    "name": "gool",
-    "private": true,
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/slacktracer/gool.git"
-    },
-    "scripts": {
-        "start": "main.js"
-    },
-    "subdomain": "gool",
-    "version": "0.0.0"
+  "author": "Thiago F. <slacktracer@gmail.com>",
+  "dependencies": {
+    "client-sessions": "0.6.x",
+    "express": "3.4.x",
+    "log": "git+https://github.com/slacktracer/log.js.git",
+    "lokapala": "git+https://github.com/slacktracer/lokapala.git",
+    "socket.io": "0.9.x"
+  },
+  "description": "A game!",
+  "engines": {
+    "node": "0.10.x"
+  },
+  "name": "gool",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/slacktracer/gool.git"
+  },
+  "scripts": {
+    "start": "main.js"
+  },
+  "subdomain": "gool",
+  "version": "0.0.1-4",
+  "devDependencies": {
+    "grunt": "^0.4.4"
+  }
 }
