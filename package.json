@@ -1,15 +1,15 @@
 {
     "author": "Thiago F. <slacktracer@gmail.com>",
+    "bugs": {
+        "url": "https://github.com/slacktracer/gool/issues"
+    },
     "dependencies": {
-        "client-sessions": "0.6.x",
-        "express": "3.4.x",
         "log": "git+https://github.com/slacktracer/log.js.git",
-        "lokapala": "git+https://github.com/slacktracer/lokapala.git",
-        "socket.io": "0.9.x"
+        "lokapala": "git+https://github.com/slacktracer/lokapala.git"
     },
     "description": "A game!",
     "engines": {
-        "node": "0.10.x"
+        "node": "~0.10.26"
     },
     "name": "gool",
     "private": true,
