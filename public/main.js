@@ -1,11 +1,10 @@
-'use strict';
-require('requirejs')
+require
     .config({
-        nodeRequire: require,
         paths: {
             'glMatrix': 'libraries/3rd-party/gl-matrix-min',
-            'modules/realtime/socket': 'modules/noop',
-            'Sketch': 'libraries/3rd-party/sketch'
+            'modules/realtime/sockets': 'modules/noop',
+            'Sketch': 'libraries/3rd-party/sketch.min',
+            'socket.io': 'socket.io/socket.io'
         },
         packages: [{
             name: 'physicsjs',
@@ -13,14 +12,11 @@ require('requirejs')
             main: 'physicsjs'
         }]
     })([
-        //'./memwatcher',
-        './server',
         'modules/main'
     ], function (
-        //memwatcher,
-        server,
         main
     ) {
+        'use strict';
         // the game starts here!
         main.go();
     });

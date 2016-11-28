@@ -3,11 +3,13 @@
 
 # TEAM
 
-    Thiago Figueiredo -- All-Mighty Creator -- slacktracer@gmail.com
+    Thiago F. -- All-Mighty Creator -- slacktracer@gmail.com
 
 # THANKS
 
     Zana Ribeiro
+
+    rumpetroll.org -- Daniel Mahal, Hans Petter Eikemo, Simen Brekken, Hugo Ahlberg
 
 # TECHNOLOGY COLOPHON
 

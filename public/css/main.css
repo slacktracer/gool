@@ -1,0 +1,35 @@
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+div#main {
+    background: #212223;
+}
+
+div#main canvas {
+    -moz-transition: background-color 0.5s;
+    -o-transition: background-color 0.5s;
+    -webkit-transition: background-color 0.5s;
+    transition: background-color 0.5s;
+}
+
+div#main.goolZone canvas {
+    background: hsla(190, 50%, 30%, 0.2);
+}
+
+div#main.safeZone canvas {
+    background: hsla(130, 50%, 30%, 0.2);
+}
+
+div#main.dangerZone canvas {
+    background: hsla(0, 50%, 30%, 0.2);
+}
+
+div#main.outerZone canvas {
+    background: hsla(0, 50%, 30%, 0.2);
+}
+
+div#main.limbo canvas {
+    background: hsla(360, 100%, 100%, 1);
+}
