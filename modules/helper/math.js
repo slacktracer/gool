@@ -7,6 +7,6 @@ define([
     var
         math;
     math = {};
-    Sketch.install(math);
+    window.Sketch.install(math);
     return math;
 });

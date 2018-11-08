@@ -2,23 +2,17 @@
 define([
     './settings/cookies',
     'client-sessions',
-    'compression',
     'errorhandler',
-    'express',
-    'static-favicon'
+    'express'
 ], function (
     cookies,
     clientSessions,
-    compression,
     errorHandler,
-    express,
-    staticFavicon
+    express
 ) {
     var
         application;
     application = express()
-        .use(compression())
-        .use(staticFavicon('./public/images/gear.png'))
         .use(express.static('./public'))
         .use('/libraries', express.static('./libraries'))
         .use('/modules', express.static('./modules'))

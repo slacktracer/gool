@@ -10,7 +10,7 @@ define([
         create: function (layerId) {
             var
                 context;
-            context = Sketch.create({
+            context = window.Sketch.create({
                 autopause: false,
                 autostart: false,
                 container: document.getElementById(layerId),
