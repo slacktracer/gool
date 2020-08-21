@@ -1,0 +1,155 @@
+version: 2.1
+
+orbs:
+  aws-cli: circleci/aws-cli@1.0.0
+
+jobs:
+  audit:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+      - run: sudo npm install -g npm
+      - run: npm run audit
+
+  install-dependencies_type-check_format-check_lint:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package-lock.json" }}
+      - run: npm ci
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package-lock.json" }}
+      - run: npm run format-check
+      - run: npm run type-check
+      - run: npm run lint
+
+  unit-tests:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package-lock.json" }}
+      - run: npm test
+
+  build-staging:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package-lock.json" }}
+      - aws-cli/setup:
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          aws-region: AWS_REGION
+      - run: npm run build
+      - run: aws s3 sync ./dist s3://$BUILDS_BUCKET/$CIRCLE_TAG/staging --delete
+
+  build-demo:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package-lock.json" }}
+      - aws-cli/setup:
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          aws-region: AWS_REGION
+      - run: npm run build
+      - run: aws s3 sync ./dist s3://$BUILDS_BUCKET/$CIRCLE_TAG/demo --delete
+
+  build-production:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package-lock.json" }}
+      - aws-cli/setup:
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          aws-region: AWS_REGION
+      - run: npm run build
+      - run: aws s3 sync ./dist s3://$BUILDS_BUCKET/$CIRCLE_TAG/production --delete
+
+  deploy-staging:
+    docker:
+      - image: circleci/node:12
+    steps:
+      - checkout
+      - aws-cli/setup:
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          aws-region: AWS_REGION
+      - run: aws s3 sync s3://$BUILDS_BUCKET/$CIRCLE_TAG/staging s3://$STAGING_BUCKET --delete
+      # https://github.com/aws/aws-cli/issues/5038
+      - run: AWS_PAGER="" aws cloudfront create-invalidation --distribution-id $STAGING_DIST_ID --paths "/index.html"
+
+workflows:
+  integrate_delivery:
+    jobs:
+      - audit:
+          filters:
+            tags:
+              only: /^v1\.\d+\.\d+$/
+            branches:
+              ignore: /.*/
+      - install-dependencies_type-check_format-check_lint:
+          requires:
+            - audit
+          filters:
+            tags:
+              only: /^.*/
+      - unit-tests:
+          requires:
+            - install-dependencies_type-check_format-check_lint
+          filters:
+            tags:
+              only: /^.*/
+      - build-staging:
+          context: <%= projectName %>_ENV_STAGING
+          requires:
+            - unit-tests
+          filters:
+            tags:
+              only: /^v1\.\d+\.\d+$/
+            branches:
+              ignore: /.*/
+      - build-demo:
+          context: <%= projectName %>_ENV_DEMO
+          requires:
+            - unit-tests
+          filters:
+            tags:
+              only: /^v1\.\d+\.\d+$/
+            branches:
+              ignore: /.*/
+      - build-production:
+          context: <%= projectName %>_ENV_PRODUCTION
+          requires:
+            - unit-tests
+          filters:
+            tags:
+              only: /^v1\.\d+\.\d+$/
+            branches:
+              ignore: /.*/
+      - deploy-staging:
+          requires:
+            - build-staging
+          filters:
+            tags:
+              only: /^v1\.\d+\.\d+$/
+            branches:
+              ignore: /.*/

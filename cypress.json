@@ -1,0 +1,9 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "integrationFolder": "tests/end-to-end/cypress/integration",
+  "pluginsFile": "tests/end-to-end/cypress/plugins/index.js",
+  "screenshotsFolder": "tests/end-to-end/cypress/screenshots",
+  "supportFile": "tests/end-to-end/cypress/support/index.js",
+  "video": false,
+  "videosFolder": "tests/end-to-end/cypress/videos"
+}
